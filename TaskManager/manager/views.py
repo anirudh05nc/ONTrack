@@ -7,8 +7,8 @@ from django.shortcuts import redirect, get_object_or_404
 from django.contrib import messages
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
-# from decouple import config
-# import requests
+from decouple import config
+import requests
 
 # Create your views here.
 
@@ -51,21 +51,21 @@ def ongo_to_comp(request, id):
         priority = onGoing_obj.priority,
         statusOfCompletion = status
     )
-#     if status == "INTIME":
-#         send_telegram_message(f'''🎉 MISSION ACCOMPLISHED! 🎉  
-# ✅ Task Completed: {onGoing_obj.title}  
-# 🕒 Finished Right in Time — You’re a beast!  
-# 🔥 You're not just OnTrack, you're ahead of the game by {onGoing_obj.endDate - now}.  
+    if status == "INTIME":
+        send_telegram_message(f'''🎉 MISSION ACCOMPLISHED! 🎉  
+✅ Task Completed: {onGoing_obj.title}  
+🕒 Finished Right in Time — You’re a beast!  
+🔥 You're not just OnTrack, you're ahead of the game by {onGoing_obj.endDate - now}.  
 
-# 🎖 Keep dominating, legend!
-# ''')
-#     else:
-#         send_telegram_message(f'''⏰ TASK COMPLETED... but late! 😓  
-# ⚠ Task: { onGoing_obj.title }
-# 🧾 Deadline was: { onGoing_obj.endDate }  
-# ⛔ You made it — but the train left the station a bit early.
+🎖 Keep dominating, legend!
+''')
+    else:
+        send_telegram_message(f'''⏰ TASK COMPLETED... but late! 😓  
+⚠ Task: { onGoing_obj.title }
+🧾 Deadline was: { onGoing_obj.endDate }  
+⛔ You made it — but the train left the station a bit early.
 
-# 🛠 Learn. Adapt. Destroy the next one. ''')
+🛠 Learn. Adapt. Destroy the next one. ''')
 
     onGoing_obj.delete()
 
@@ -91,21 +91,21 @@ def todo_to_comp(request, id):
         priority = toDo_obj.priority,
         statusOfCompletion = statusOfCompletion
     )
-#     if statusOfCompletion == "INTIME":
-#         send_telegram_message(f'''🎉 MISSION ACCOMPLISHED! 🎉  
-# ✅ Task Completed: {toDo_obj.title}  
-# 🕒 Finished Right in Time — You’re a beast!  
-# 🔥 You're not just OnTrack, you're ahead of the game by {toDo_obj.endDate - now}.  
+    if statusOfCompletion == "INTIME":
+        send_telegram_message(f'''🎉 MISSION ACCOMPLISHED! 🎉  
+✅ Task Completed: {toDo_obj.title}  
+🕒 Finished Right in Time — You’re a beast!  
+🔥 You're not just OnTrack, you're ahead of the game by {toDo_obj.endDate - now}.  
 
-# 🎖 Keep dominating, legend!
-# ''')
-#     else:
-#         send_telegram_message(f'''⏰ TASK COMPLETED... but late! 😓  
-# ⚠ Task: { toDo_obj.title }
-# 🧾 Deadline was: { toDo_obj.endDate }  
-# ⛔ You made it — but the train left the station a bit early.
+🎖 Keep dominating, legend!
+''')
+    else:
+        send_telegram_message(f'''⏰ TASK COMPLETED... but late! 😓  
+⚠ Task: { toDo_obj.title }
+🧾 Deadline was: { toDo_obj.endDate }  
+⛔ You made it — but the train left the station a bit early.
 
-# 🛠 Learn. Adapt. Destroy the next one. ''')
+🛠 Learn. Adapt. Destroy the next one. ''')
 
     toDo_obj.delete()
     
@@ -337,15 +337,15 @@ def home(request):
             endDate = endDate,
             priority = priority
         )
-#         send_telegram_message(f'''Hey {request.user.first_name}
-# 🔥 NEW MISSION UNLOCKED!
-# 🎯 Task Created: { title }
-# 💡 Description: { description }
-# 🚀 Deadline: { endDate }
-# 🔥{priority} Priority Task
+        send_telegram_message(f'''Hey {request.user.first_name}
+🔥 NEW MISSION UNLOCKED!
+🎯 Task Created: { title }
+💡 Description: { description }
+🚀 Deadline: { endDate }
+🔥{priority} Priority Task
 
-# 💥 LET'S GET THIS DONE, CHAMP! 💥
-# — ONTRACK is watching you...succeed.💪''')
+💥 LET'S GET THIS DONE, CHAMP! 💥
+— ONTRACK is watching you...succeed.💪''')
         return redirect('home')
 
     return render(request, 'home.html', context)
@@ -385,19 +385,19 @@ def logout_view(request):
     return redirect('login')
 
 
-# def send_telegram_message(text):
-#     bot_token = config('TELEGRAM_BOT_TOKEN')
-#     chat_id = config('TELEGRAM_CHAT_ID')
-#     url = f'https://api.telegram.org/bot{bot_token}/sendMessage'
+def send_telegram_message(text):
+    bot_token = config('TELEGRAM_BOT_TOKEN')
+    chat_id = config('TELEGRAM_CHAT_ID')
+    url = f'https://api.telegram.org/bot{bot_token}/sendMessage'
 
-#     payload = {
-#         'chat_id': chat_id,
-#         'text': text
-#     }
+    payload = {
+        'chat_id': chat_id,
+        'text': text
+    }
 
-#     try:
-#         response = requests.post(url, data=payload)
-#         return response.json()
-#     except Exception as e:
-#         print("Telegram Error:", e)
+    try:
+        response = requests.post(url, data=payload)
+        return response.json()
+    except Exception as e:
+        print("Telegram Error:", e)
 
